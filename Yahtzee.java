@@ -31,6 +31,12 @@ public class Yahtzee extends GraphicsProgram implements YahtzeeConstants {
 	public void run() {
 		IODialog dialog = getDialog();
 		nPlayers = dialog.readInt("Enter number of players");
+		if(nPlayers > MAX_PLAYERS){
+			while(nPlayers > MAX_PLAYERS){
+			dialog.println("Please enter a number no more than 4.");
+			nPlayers = dialog.readInt("Enter number of players");
+			}
+		}
 		playerNames = new String[nPlayers];
 		for (int i = 1; i <= nPlayers; i++) {
 			playerNames[i - 1] = dialog.readLine("Enter name for player " + i);
@@ -40,74 +46,81 @@ public class Yahtzee extends GraphicsProgram implements YahtzeeConstants {
 		playGame();
 	}
 
-/*
- *  Method: playGame()
- * ------------------
- * This method enable the players to play the game.
- */
+	/*
+	 * Method: playGame() 
+	 * ------------------
+	 * This method enable the players to play the game.
+	 */
 	private void playGame() {
 
 		for (int i = 0; i < 13; i++) {
 			for (int j = 1; j <= nPlayers; j++) {
-               playOneTurn(j);
+				playOneTurn(j);
 			}
 		}
-		
+
 		calculateFinalScore();
-		
+
 		printFinalScore();
-		
+
 		printResult(getWinner(scorecard));
 
 	}
-/*
- * Method: playOneTurn(int player)
- * ------------------
- * This method enable one player to play one turn of game.
- */
-private void playOneTurn(int player) {
-	
-	display.printMessage(playerNames[player - 1]
-			+ "'s turn! Click \"Roll Dice\" button to roll the dice.");
-	display.waitForPlayerToClickRoll(player);
 
-	firstRoll();
-	
-	rollAgainTwice();
-	
-	display.printMessage("Select a category for this roll.");
-	category = display.waitForPlayerToSelectCategory();
-	
-	updatePlayerScore(player);
-}
-/*
- * Method:rollAgainTwice();
- *  ------------------
- * This method enable the player to reroll the dice twice after the first roll.
- */
-private void rollAgainTwice() {
-	for (int k = 0; k < 2; k++) {
-		display.printMessage("Select the dice you wish to re-roll and click \"Roll Again\"");
-		display.waitForPlayerToSelectDice();
-		rollAgain();
+	/*
+	 * Method: playOneTurn(int player) 
+	 * --------------------------------
+	 * This method enable one
+	 * player to play one turn of game.
+	 */
+	private void playOneTurn(int player) {
+
+		display.printMessage(playerNames[player - 1]
+				+ "'s turn! Click \"Roll Dice\" button to roll the dice.");
+		display.waitForPlayerToClickRoll(player);
+
+		firstRoll();
+
+		rollAgainTwice();
+
+		display.printMessage("Select a category for this roll.");
+		category = display.waitForPlayerToSelectCategory();
+
+		updatePlayerScore(player);
 	}
-}
-/*
- *  Method:printResult(int winner);
- * ------------------------------------
- * This method will print the result of the game.
- */
+
+	/*
+	 * Method:rollAgainTwice();
+	 *---------------------------
+	 *  This method enable the player to 
+	 *  roll the dice twice again after the first roll.
+	 */
+	private void rollAgainTwice() {
+		for (int k = 0; k < 2; k++) {
+			display.printMessage("Select the dice you wish to re-roll and click \"Roll Again\"");
+			display.waitForPlayerToSelectDice();
+			rollAgain();
+		}
+	}
+
+	/*
+	 * Method:printResult(int winner); 
+	 * ------------------------------------ 
+	 * This method will print the result of the game.
+	 */
 	private void printResult(int winner) {
 		display.printMessage("Congratulations, " + playerNames[winner - 1]
 				+ " ,you're the winner with a total score of "
 				+ scorecard[winner - 1][TOTAL - 1]);
 
 	}
-/*
- *  Method:calculateFinalScore()
- * ------------------------------------
- * This method will calculate the bonus score and the final total score of each player.
- */
+
+	/*
+	 * Method:calculateFinalScore() 
+	 * ------------------------------------ 
+	 * This method will calculate the bonus score and the final total score of each
+	 * player.
+	 */
 	private void calculateFinalScore() {
 		for (int i = 1; i <= nPlayers; i++) {
 
@@ -118,11 +131,12 @@ private void rollAgainTwice() {
 					+ scorecard[i - 1][LOWER_SCORE - 1];
 		}
 	}
-/*
- * Method:printFinalScore()
- * ----------------------------
- * This method will display the upper score and lower score and the total score.
- */
+
+	/*
+	 * Method:printFinalScore() 
+	 * ---------------------------- 
+	 * This method will display the upper score and lower score and the total score.
+	 */
 	private void printFinalScore() {
 		for (int i = 1; i <= nPlayers; i++) {
 			display.updateScorecard(UPPER_SCORE, i,
@@ -134,13 +148,14 @@ private void rollAgainTwice() {
 			display.updateScorecard(TOTAL, i, scorecard[i - 1][TOTAL - 1]);
 		}
 	}
-/*
- * Method:updatePlayerScore(int player)
- * -------------------------------------
- * This method will update the score card after each round.
- * 
- */
+
+	/*
+	 * Method:updatePlayerScore(int player)
+	 * -------------------------------------
+	 *  This method will update the score card after each round.
+	 */
 	private void updatePlayerScore(int player) {
+		
 		if (!selected[player - 1][category - 1]) {
 			updateScore(dice, category, player);
 		} else {
@@ -151,11 +166,12 @@ private void rollAgainTwice() {
 			updateScore(dice, category, player);
 		}
 	}
-/*
- *  Method:getWinner(int[][] scorecard)
- * -------------------------------------
- * This method will get the index of the winner. 
- */
+
+	/*
+	 * Method:getWinner(int[][] scorecard) 
+	 * -------------------------------------
+	 * This method will get the index of the winner.
+	 */
 	private int getWinner(int[][] scorecard) {
 		int winner = 0;
 		int topScore = 0;
@@ -167,20 +183,22 @@ private void rollAgainTwice() {
 		}
 		return winner;
 	}
-/*
- *  Method:setUp()
- * -------------------
- * This method will initialize the score card and selected array. 
- */
+
+	/*
+	 * Method:setUp() 
+	 * ------------------- 
+	 * This method will initialize the score card and selected array.
+	 */
 	private void setUp() {
 		scorecard = new int[nPlayers][17];
 		selected = new boolean[nPlayers][17];
 	}
-/*
- *  Method:getBonus(int upperScore)
- * ------------------------------------
- * This method will get the bonus according to the upper score after each round.
- */
+
+	/*
+	 * Method:getBonus(int upperScore) 
+	 * ------------------------------------ 
+	 * This method will get the bonus according to the upper score after each round.
+	 */
 	private int getBonus(int upperScore) {
 
 		int upperScoreBonus;
@@ -191,29 +209,42 @@ private void rollAgainTwice() {
 		}
 		return upperScoreBonus;
 	}
-/*
- * Method:updateScore(int[] dice, int category, int player)
- * ---------------------------------------------------------
- * This method will update the score card after each round.
- */
+
+	/*
+	 * Method:updateScore(int[] dice, int category, int player)
+	 * --------------------------------------------------------- 
+	 * This method will update the score card after each round.
+	 */
 	private void updateScore(int[] dice, int category, int player) {
 		if (checkCategory(dice, category, player)) {
 
 			score = getScore(dice, category, player);
+
 			display.updateScorecard(category, player, score);
 			display.updateScorecard(TOTAL, player,
 					scorecard[player - 1][TOTAL - 1]);
 
 		} else {
+			if(category == YAHTZEE && scorecard[player - 1][YAHTZEE - 1] != 0){
+				display.printMessage("This is not a YAHTZEE, please select another category!");
+				
+				while(category == YAHTZEE){
+				category = display.waitForPlayerToSelectCategory();
+				updateScore(dice, category, player);
+				}
+			}else{
+
 			display.updateScorecard(category, player, 0);
+			}
 		}
 
 	}
-/*
- *  Method:checkCategory(int[] dice, int category, int player)
- * ---------------------------------------------------------
- * This method will check whether the dice suits the chosen category.
- */
+
+	/*
+	 * Method:checkCategory(int[] dice, int category, int player)
+	 * --------------------------------------------------------- 
+	 * This method will check whether the dice suits the chosen category.
+	 */
 	private boolean checkCategory(int[] dice, int category, int player) {
 
 		int[] occDis = occDis(dice);
@@ -258,7 +289,7 @@ private void rollAgainTwice() {
 			break;
 		case YAHTZEE:
 			if (topTwo[0] == 5) {
-				selected[player - 1][category - 1] = true;
+//				selected[player - 1][category - 1] = true;
 				return true;
 			}
 			break;
@@ -266,12 +297,12 @@ private void rollAgainTwice() {
 		}
 		return false;
 	}
-/*
- * Method:checkSmallStraight(int[] occDis)
- * -------------------------------------------------
- * This method will check whether the occur distribution suits the 
- * small straight category.
- */
+
+	/*
+	 * Method:checkSmallStraight(int[] occDis)
+	 * ------------------------------------------------- 
+	 * This method will check whether the occur distribution suits the small straight category.
+	 */
 	private boolean checkSmallStraight(int[] occDis) {
 		for (int i = 0; i < 3; i++) {
 			if (occDis[i] >= 1 && occDis[i + 1] >= 1 && occDis[i + 2] >= 1
@@ -281,12 +312,12 @@ private void rollAgainTwice() {
 		}
 		return false;
 	}
-/*
- *  Method:occDis(int[] dice)
- * -------------------------------------------------
- * This method will get the occur distribution of each number from 1 to 6 
- * according to a dice.
- */
+
+	/*
+	 * Method:occDis(int[] dice)
+	 * ------------------------------------------------- 
+	 * This method will get the occur distribution of each number from 1 to 6 according to a dice.
+	 */
 	private int[] occDis(int[] dice) {
 
 		int[] occDis = new int[6];
@@ -316,12 +347,12 @@ private void rollAgainTwice() {
 		return occDis;
 
 	}
-/*
- * Method:getTopTwo(int occDis[])
- * -------------------------------------------------
- * This method will get the top two occurrence number of 
- * a occurrence distribution.
- */
+
+	/*
+	 * Method:getTopTwo(int occDis[])
+	 * ------------------------------------------------- 
+	 * This method will get the top two occurrence number of a occurrence distribution.
+	 */
 	private int[] getTopTwo(int occDis[]) {
 		int[] topTwo = new int[2];
 
@@ -342,11 +373,12 @@ private void rollAgainTwice() {
 
 		return topTwo;
 	}
-/*
- * Method:rollAgain() 
- * --------------------------------------
- * This method will update the chosen dice.
- */
+
+	/*
+	 * Method:rollAgain() 
+	 * -------------------------------------- 
+	 * This method will update the chosen dice.
+	 */
 	private void rollAgain() {
 
 		for (int index = 0; index < dice.length; index++) {
@@ -357,23 +389,27 @@ private void rollAgainTwice() {
 		display.displayDice(dice);
 
 	}
-/*
- * Method:firstRoll() 
- * --------------------------------------
- * This method will update all the dices.
- */
+
+	/*
+	 * Method:firstRoll() 
+	 * -------------------------------------- 
+	 * This method will update all the dices.
+	 */
 	private void firstRoll() {
 
 		for (int i = 0; i < dice.length; i++) {
-			dice[i] = rgen.nextInt(1, 6);
+//			dice[i] = rgen.nextInt(1, 6);
+			dice[i] = 1;
+
 		}
 		display.displayDice(dice);
 	}
-/*
- * Method:getScore(int[] dice, int category, int player) 
- * ------------------------------------------------------
- * This method will get the score according to the dice and category. 
- */
+
+	/*
+	 * Method:getScore(int[] dice, int category, int player)
+	 * ------------------------------------------------------ 
+	 * This method will get the score according to the dice and category.
+	 */
 	private int getScore(int[] dice, int category, int player) {
 		int score = 0;
 		switch (category) {
@@ -411,7 +447,12 @@ private void rollAgainTwice() {
 			scorecard[player - 1][LOWER_SCORE - 1] += score;
 			break;
 		case YAHTZEE:
-			score = 50;
+			if(scorecard[player-1][YAHTZEE-1] == 0){
+				score = 50;
+			}else{
+				score = scorecard[player-1][YAHTZEE-1] + 100;
+			}
+			scorecard[player-1][YAHTZEE-1] = score;
 			scorecard[player - 1][LOWER_SCORE - 1] += score;
 			break;
 		case CHANCE:
@@ -419,14 +460,19 @@ private void rollAgainTwice() {
 			scorecard[player - 1][LOWER_SCORE - 1] += score;
 			break;
 		}
+		if(category == YAHTZEE && scorecard[player - 1][YAHTZEE - 1] != 50){
+			scorecard[player - 1][TOTAL - 1] += 100;
+		}else{
 		scorecard[player - 1][TOTAL - 1] += score;
+		}
 		return score;
 	}
-/*
- * Method:sum(int[] dice)
- * ------------------------------------------------------
- * This method will calculate the sum of the numbers of the dices.
- */
+
+	/*
+	 * Method:sum(int[] dice)
+	 * ------------------------------------------------------ 
+	 * This method will calculate the sum of the numbers of the dices.
+	 */
 	private int sum(int[] dice) {
 		int sum = 0;
 		for (int i = 0; i < dice.length; i++) {
@@ -440,10 +486,13 @@ private void rollAgainTwice() {
 	private String[] playerNames;
 	private YahtzeeDisplay display;
 	private RandomGenerator rgen = new RandomGenerator();
+	/* int[] dice is used to keep the record of the numbers on the dice. */
 	private int[] dice = new int[N_DICE];
 	private int score;
 	private int category;
+	/* int[][] scorecard is used to keep the record of the score of all players. */
 	private int[][] scorecard;
+	/* boolean[][] selected is used to keep the record of whether a category has been selected. */
 	private boolean[][] selected;
 
 }
